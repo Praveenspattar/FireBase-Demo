@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,14 +69,15 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_list_item, list);
         listView.setAdapter(adapter);
 
-        FirebaseDatabase.getInstance().getReference().child("Languages").child("n5").setValue("XML");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Languages");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Information");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 list.clear();
                 for (DataSnapshot snapshot : datasnapshot.getChildren()) {
-                    list.add(snapshot.getValue().toString());
+                    Information info = snapshot.getValue(Information.class);
+                    String txt = info.getName() + ":" + info.getEmail();
+                    list.add(txt);
                 }
                 adapter.notifyDataSetChanged();
             }
